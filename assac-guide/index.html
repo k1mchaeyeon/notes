@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ASSAC 팀원 파트 쉬운 설명</title>
+<style>
+:root{--bg:#f6f5f1;--card:#ffffff;--ink:#1d1f23;--sub:#5b616b;--line:#dedbd2;--accent:#7a3cc4;--soft:#f0eafa;--say:#eef6f1;--sayline:#2f7d57;--warn:#fff4e0;--warnline:#b06a00;--mono:ui-monospace,SFMono-Regular,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#15161a;--card:#1e2026;--ink:#ecedf0;--sub:#a3a8b3;--line:#32353d;--accent:#b891ee;--soft:#2a2438;--say:#1c2a23;--sayline:#6fc79a;--warn:#2e2618;--warnline:#e0a94a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;word-break:keep-all}
+header{padding:28px 16px 8px;max-width:920px;margin:0 auto}
+h1{font-size:26px;margin:0 0 6px;letter-spacing:-.02em}
+header p{margin:0;color:var(--sub)}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav div{max-width:920px;margin:0 auto;padding:10px 16px;display:flex;gap:8px;overflow-x:auto}
+nav a{flex:none;text-decoration:none;color:var(--ink);border:1px solid var(--line);background:var(--card);padding:6px 12px;border-radius:999px;font-size:14px}
+main{max-width:920px;margin:0 auto;padding:8px 16px 80px}
+section{margin-top:36px;scroll-margin-top:64px}
+h2{font-size:21px;margin:0 0 4px;letter-spacing:-.01em}
+.who{color:var(--sub);font-size:14px;margin:0 0 14px}
+h3{font-size:17px;margin:0 0 6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0}
+.card p{margin:6px 0}
+.eg{color:var(--accent);font-weight:600}
+.ours{background:var(--soft);border-radius:8px;padding:10px 12px;margin:10px 0 0;font-size:15px}
+.ours b{font-weight:600}
+.say{background:var(--say);border-left:3px solid var(--sayline);border-radius:0 8px 8px 0;padding:10px 12px;margin:10px 0 0;font-size:15px}
+.say .q{display:block;color:var(--sub);font-size:13px;margin-bottom:2px}
+.warn{background:var(--warn);border-left:3px solid var(--warnline);border-radius:0 8px 8px 0;padding:10px 12px;margin:10px 0 0;font-size:15px}
+code{font-family:var(--mono);font-size:.88em;background:var(--soft);padding:1px 5px;border-radius:4px}
+.tw{overflow-x:auto;margin:10px 0 0}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:520px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--sub);font-weight:600;font-size:13px}
+ol,ul{margin:6px 0;padding-left:22px}
+li{margin:3px 0}
+.flow{display:flex;flex-direction:column;gap:0;margin:12px 0}
+.step{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.step b{display:block}
+.step span{color:var(--sub);font-size:14px}
+.arrow{text-align:center;color:var(--sub);line-height:1.2;padding:2px 0}
+.zone{border:1.5px dashed var(--line);border-radius:12px;padding:10px;margin:0}
+.zone>small{color:var(--sub);display:block;margin:0 4px 6px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--sub);margin-top:8px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.b1{background:var(--soft)}.b2{background:var(--say)}.b3{background:var(--warn)}
+</style>
+</head>
+<body>
+<header>
+  <h1>ASSAC 팀원 파트 쉬운 설명</h1>
+  <p>다른 팀원이 만든 부분을 병원 건물에 빗대어 풀었습니다. 설정값은 2026-10-11에 AWS와 저장소에서 직접 조회한 것입니다.</p>
+</header>
+<nav><div>
+  <a href="#all">전체 그림</a><a href="#net">네트워크</a><a href="#app">WEB·WAS·배포</a><a href="#db">DB·보안</a><a href="#mon">모니터링</a><a href="#tf">Terraform</a><a href="#pair">헷갈리는 짝</a><a href="#fix">고칠 표현</a>
+</div></nav>
+<main>
+
+<section id="all">
+  <h2>전체 그림</h2>
+  <p class="who">요청 하나가 위에서 아래로 내려갑니다.</p>
+  <div class="flow">
+    <div class="step"><b>사용자</b><span>브라우저에서 assac.cloud 접속</span></div>
+    <div class="arrow">↓</div>
+    <div class="step"><b>엣지: Route 53 → CloudFront + WAF</b><span>건물 밖 정문. HTTPS를 받고 공격을 거름 (내 담당)</span></div>
+    <div class="arrow">↓ HTTPS 443</div>
+    <div class="zone"><small>VPC 10.0.0.0/16 · 서울 리전 · 가용 영역 2a와 2c에 똑같이 한 벌씩</small>
+      <div class="step"><b>WEB ALB</b><span>Public 서브넷. CloudFront에서 온 요청만 받아 Apache로 나눔</span></div>
+      <div class="arrow">↓ HTTP 80</div>
+      <div class="step"><b>1계층 WEB: Apache</b><span>접수 창구. 정적 파일은 직접 주고 나머지는 뒤로 넘김</span></div>
+      <div class="arrow">↓ HTTP 80</div>
+      <div class="step"><b>내부 ALB</b><span>Apache가 넘긴 요청을 WAS로 나눔</span></div>
+      <div class="arrow">↓ HTTP 8080</div>
+      <div class="step"><b>2계층 WAS: Jetty + PetClinic</b><span>진료실. 실제 프로그램이 돌며 화면을 만듦</span></div>
+      <div class="arrow">↓ MySQL 3306</div>
+      <div class="step"><b>3계층 DB: RDS MySQL</b><span>차트 보관실. WAS만 들어올 수 있음</span></div>
+    </div>
+  </div>
+  <div class="legend"><span><i class="b1"></i>보라 칸: 우리 실제 설정</span><span><i class="b2"></i>초록 칸: 질문 받으면 이렇게</span><span><i class="b3"></i>노랑 칸: 주의</span></div>
+</section>
+
+<section id="net">
+  <h2>1. 네트워크</h2>
+  <p class="who">담당 김사라 · VPC, 서브넷, 라우팅, NAT, ALB, Auto Scaling</p>
+
+  <div class="card">
+    <h3>VPC와 서브넷</h3>
+    <p><span class="eg">VPC는 병원 건물 전체, 서브넷은 건물 안의 구역</span>이에요. 구역을 역할별로 넷으로 나누고, 같은 구역을 가용 영역 두 곳에 하나씩 만들었어요. 그래서 서브넷이 모두 8개예요.</p>
+    <div class="tw"><table>
+      <tr><th>구역</th><th>2a</th><th>2c</th><th>안에 있는 것</th><th>밖으로 나가는 길</th></tr>
+      <tr><td>Public (로비)</td><td>10.0.0.0/24</td><td>10.0.1.0/24</td><td>WEB ALB, NAT, Bastion</td><td>인터넷 게이트웨이</td></tr>
+      <tr><td>WEB (접수)</td><td>10.0.5.0/24</td><td>10.0.6.0/24</td><td>Apache</td><td>NAT</td></tr>
+      <tr><td>WAS (진료실)</td><td>10.0.10.0/24</td><td>10.0.11.0/24</td><td>Jetty WAS</td><td>NAT</td></tr>
+      <tr><td>DB (보관실)</td><td>10.0.20.0/24</td><td>10.0.21.0/24</td><td>RDS, 비밀번호 교체 Lambda, VPC Endpoint</td><td>없음</td></tr>
+    </table></div>
+    <div class="say"><span class="q">/16, /24가 뭔가요?</span>슬래시 뒤 숫자가 작을수록 주소가 많아요. VPC는 /16이라 약 6만 5천 개, 서브넷은 /24라 256개씩이에요. 나중에 서브넷을 더 만들 여유를 두려고 VPC를 넓게 잡았어요.</div>
+  </div>
+
+  <div class="card">
+    <h3>Public과 Private</h3>
+    <p><span class="eg">정문으로 바로 이어지는 구역이냐 아니냐</span>의 차이예요. 구역마다 안내판(라우팅 테이블)이 있고, 거기에 "밖은 정문으로"라고 적혀 있으면 Public이에요.</p>
+    <div class="ours"><b>우리 안내판 4개</b><br><code>assac-rt-public</code> 밖은 인터넷 게이트웨이로 · <code>assac-rt-web</code>과 <code>assac-rt-was</code> 밖은 NAT로 · <code>assac-rt-db</code> 밖으로 나가는 길 없음</div>
+    <div class="say"><span class="q">Public과 Private은 뭐가 다른가요?</span>인터넷 게이트웨이로 가는 경로가 있으면 Public, 없으면 Private이에요. 저희는 밖에서 닿아야 하는 WEB ALB만 Public에 두고, 서버와 DB는 전부 Private에 뒀어요.</div>
+  </div>
+
+  <div class="card">
+    <h3>인터넷 게이트웨이와 NAT</h3>
+    <p><span class="eg">인터넷 게이트웨이는 정문, NAT는 안쪽 직원의 심부름 창구</span>예요. 정문은 양쪽으로 오갈 수 있어요. NAT는 안에서 밖으로 나가는 것만 대신해 줘요.</p>
+    <p>WAS가 밖에 나갈 일은 두 가지예요. ECR에서 Docker 이미지를 받을 때, 그리고 로그와 지표를 CloudWatch로 보낼 때예요.</p>
+    <div class="ours"><b>우리 NAT</b> Regional NAT Gateway 1개. 리소스는 하나지만 2a와 2c 양쪽에 공인 IP를 하나씩 갖고 두 영역을 함께 맡아요.</div>
+    <div class="say"><span class="q">NAT는 비싼데 왜 썼나요?</span>서버를 밖에서 못 들어오는 Private에 두면서도, 이미지를 받거나 로그를 보내는 나가는 통신은 필요해서요. 직접 관리해야 하는 NAT 인스턴스 대신 관리형을 골랐어요.</div>
+    <div class="say"><span class="q">NAT가 있는데 왜 밖에서 WAS로 못 들어오나요?</span>NAT는 안에서 먼저 건 연결과 그 응답만 지나가요. 밖에서 먼저 거는 연결은 받지 않아요.</div>
+  </div>
+
+  <div class="card">
+    <h3>보안그룹</h3>
+    <p><span class="eg">방마다 붙은 출입 명단</span>이에요. IP 주소 대신 "앞 방에서 온 사람만"이라고 적어서, 앞 층을 거치지 않으면 못 들어오게 줄줄이 묶었어요.</p>
+    <div class="tw"><table>
+      <tr><th>방</th><th>들어올 수 있는 곳</th><th>문 번호</th></tr>
+      <tr><td>WEB ALB</td><td>CloudFront 대역만</td><td>443</td></tr>
+      <tr><td>Apache</td><td>WEB ALB만 (관리용으로 Bastion 22)</td><td>80</td></tr>
+      <tr><td>내부 ALB</td><td>Apache만</td><td>80</td></tr>
+      <tr><td>WAS</td><td>내부 ALB만 (관리용으로 Bastion 22)</td><td>8080</td></tr>
+      <tr><td>DB</td><td>WAS와 비밀번호 교체 Lambda만</td><td>3306</td></tr>
+    </table></div>
+    <div class="say"><span class="q">왜 IP 대신 보안그룹을 출발지로 적었나요?</span>Auto Scaling으로 서버가 바뀌면 IP도 바뀌어요. 보안그룹으로 적어 두면 새 서버가 떠도 규칙을 고칠 필요가 없어요.</div>
+  </div>
+
+  <div class="card">
+    <h3>Bastion</h3>
+    <p><span class="eg">관리자 전용 출입구</span>예요. Private에 있는 서버에 SSH로 들어가야 할 때, 로비에 있는 Bastion을 먼저 거쳐요.</p>
+    <div class="ours"><b>우리 Bastion</b> t3.micro, Public 서브넷 2a. 22번 포트를 정해 둔 IP 두 곳에만 열었어요.</div>
+  </div>
+
+  <div class="card">
+    <h3>ALB (로드밸런서)</h3>
+    <p><span class="eg">안내 데스크</span>예요. 뒤에 있는 서버 여러 대 중 건강한 서버로 요청을 나눠 보내요. 주기적으로 서버에 "살아 있니?"를 물어보는데 이게 <b>헬스체크</b>예요.</p>
+    <div class="ours"><b>우리 ALB 2개</b><br><code>assac-alb-web</code> 인터넷용. 443으로 받아 Apache 80으로 전달.<br><code>assac-alb-internal</code> 내부용. 80으로 받아 WAS 8080으로 전달. 헬스체크는 <code>/</code> 경로에 30초마다.</div>
+    <div class="say"><span class="q">ALB가 왜 두 개인가요?</span>층마다 서버가 여러 대라서, 층 앞에 요청을 나눠 주는 곳이 하나씩 필요해요. WEB ALB는 Apache로, 내부 ALB는 WAS로 나눠요. 층을 따로 늘리고 한 층의 장애가 다른 층으로 번지지 않게 하는 구조예요.</div>
+    <div class="say"><span class="q">NLB가 아니라 ALB인 이유는요?</span>웹 요청은 HTTP라서, 경로와 상태 코드를 보고 헬스체크와 분산을 하는 ALB가 맞아요. NLB는 TCP 수준에서 아주 빠르게 넘기는 용도예요.</div>
+  </div>
+
+  <div class="card">
+    <h3>Auto Scaling 그룹 (ASG)</h3>
+    <p><span class="eg">인력 사무소</span>예요. 서버 수를 정해 둔 범위 안에서 알아서 맞춰요. 서버가 죽으면 새로 뽑고, 바쁘면 더 뽑고, 한가하면 줄여요.</p>
+    <div class="ours"><b>우리 ASG 2개</b><br><code>assac-asg-was</code> t3.medium, 최소 2 · 최대 6. 평균 CPU 70%를 목표로 자동 증감.<br><code>assac-asg-web</code> t3.small. 같은 70% 기준.<br>둘 다 2a와 2c에 걸쳐 있고, ALB 헬스체크에서 떨어진 서버는 교체해요.</div>
+    <div class="say"><span class="q">서버 한 대가 죽으면 어떻게 되나요?</span>ALB가 헬스체크로 먼저 알아채고 그 서버로 요청을 안 보내요. 그사이 Auto Scaling이 새 서버를 만들어 대수를 다시 맞춰요.</div>
+    <div class="say"><span class="q">왜 70%인가요?</span>새 서버가 뜨는 데 몇 분 걸려요. 꽉 차기 전에 늘리기 시작해야 그동안 기존 서버가 버틸 여유가 있어요.</div>
+  </div>
+</section>
+
+<section id="app">
+  <h2>2. WEB · WAS · 배포</h2>
+  <p class="who">담당 신이현(팀장) · Apache, Jetty, Docker, ECR, GitHub Actions</p>
+
+  <div class="card">
+    <h3>Apache (WEB 서버)</h3>
+    <p><span class="eg">접수 창구</span>예요. 간단한 건 창구에서 바로 처리하고, 진료가 필요한 건 진료실로 넘겨요. 이렇게 대신 받아서 뒤로 넘기는 걸 <b>리버스 프록시</b>라고 해요.</p>
+    <div class="ours"><b>우리 Apache 설정 (httpd.conf)</b>
+      <ul>
+        <li><code>/resources/</code> 아래의 CSS·이미지·폰트는 Apache가 직접 응답</li>
+        <li>403, 404, 500, 502, 503 오류 페이지도 Apache가 직접 응답</li>
+        <li>그 밖의 모든 요청은 내부 ALB로 전달 (<code>ProxyPass /</code>)</li>
+      </ul>
+    </div>
+    <div class="say"><span class="q">WEB과 WAS를 어떻게 연동했나요?</span>Apache의 프록시 모듈(mod_proxy)을 썼어요. 정적 파일 경로만 예외로 두고, 나머지 요청은 내부 ALB 주소로 넘기도록 설정했어요.</div>
+  </div>
+
+  <div class="card">
+    <h3>WAS (Jetty + PetClinic)</h3>
+    <p><span class="eg">진료실</span>이에요. PetClinic이라는 Java 프로그램이 여기서 돌아요. 요청을 받으면 DB에서 데이터를 읽어 화면(HTML)을 만들어 돌려줘요.</p>
+    <p>Jetty는 Java 웹 프로그램을 실행해 주는 서버예요. Tomcat과 같은 역할이에요.</p>
+    <div class="ours"><b>우리 WAS</b> Jetty 9.4 + JDK 17, 포트 8080. PetClinic을 WAR 파일로 묶어 Jetty에 올렸어요.</div>
+    <div class="say"><span class="q">WEB 서버와 WAS는 뭐가 다른가요?</span>WEB 서버는 이미 만들어진 파일을 그대로 주고, WAS는 프로그램을 실행해서 요청마다 결과를 새로 만들어요.</div>
+  </div>
+
+  <div class="card">
+    <h3>Docker와 ECR</h3>
+    <p><span class="eg">Docker 이미지는 이사 박스</span>예요. 프로그램과 그게 돌아가는 데 필요한 것을 한 상자에 담아요. 어느 서버에서 열어도 똑같이 돌아요. <b>ECR</b>은 그 상자를 쌓아 두는 창고예요.</p>
+    <div class="ours"><b>우리 이미지 2개</b><br>WAS 이미지: Jetty 위에 <code>petclinic.war</code>를 올린 것 → 창고 <code>assac-ecr</code><br>WEB 이미지: Apache에 설정 파일과 정적 파일을 넣은 것 → 창고 <code>assac-ecr-web</code><br>상자마다 커밋 번호와 <code>latest</code> 두 가지 이름표가 붙어요.</div>
+    <div class="say"><span class="q">왜 컨테이너로 배포했나요?</span>서버마다 Java 버전이나 설정이 조금씩 달라지는 문제를 없애려고요. 새 서버가 떠도 같은 이미지를 받아 실행하니까 전부 똑같이 동작해요.</div>
+  </div>
+
+  <div class="card">
+    <h3>CI/CD (GitHub Actions)</h3>
+    <p><span class="eg">자동 배송 라인</span>이에요. 코드를 올리면 사람이 서버에 들어가지 않아도 빌드부터 교체까지 자동으로 흘러가요.</p>
+    <ol>
+      <li>개발자가 <code>main</code> 브랜치에 코드를 올림</li>
+      <li>GitHub Actions가 Maven으로 한 번 빌드 (WAR 파일과 정적 파일이 나옴)</li>
+      <li>그 결과물로 WAS 이미지와 WEB 이미지를 각각 만들어 ECR에 올림</li>
+      <li>두 Auto Scaling 그룹에 "서버를 새 걸로 바꿔 줘"라고 요청 (<b>Instance Refresh</b>)</li>
+      <li>새 서버가 뜨면서 ECR에서 최신 이미지를 받아 실행</li>
+      <li>헬스체크를 통과하면 그다음 서버를 교체</li>
+    </ol>
+    <div class="ours"><b>Instance Refresh 설정</b> 최소 정상 비율 50%. 두 대 중 한 대는 항상 남겨 두고 한 대씩 바꿔요. 이게 롤링 배포예요.</div>
+    <div class="say"><span class="q">배포하는 동안 서비스가 끊기나요?</span>두 대를 한 번에 내리지 않고 한 대씩 바꿔서 안 끊겨요. 새 서버가 헬스체크를 통과해야 다음 서버로 넘어가요.</div>
+    <div class="say"><span class="q">GitHub Actions는 AWS에 어떻게 인증하나요?</span>CI 전용 계정의 키를 GitHub Secrets에 넣어서 써요. 이 계정은 이미지를 올리는 것과 서버 교체를 요청하는 것만 할 수 있어요. 고정 키 대신 OIDC로 바꾸는 게 다음 개선이에요.</div>
+  </div>
+</section>
+
+<section id="db">
+  <h2>3. DB · 보안</h2>
+  <p class="who">담당 나건호 · RDS, Secrets Manager, VPC Endpoint, IAM, GuardDuty</p>
+
+  <div class="card">
+    <h3>RDS와 Multi-AZ</h3>
+    <p><span class="eg">RDS는 관리인이 딸린 차트 보관실</span>이에요. 백업, 패치, 장애 전환을 AWS가 해 줘요. <b>Multi-AZ</b>는 다른 건물에 똑같은 보관실을 하나 더 두고 실시간으로 베껴 두는 거예요. 원래 보관실에 문제가 생기면 자동으로 그쪽으로 넘어가요.</p>
+    <div class="ours"><b>우리 RDS</b> MySQL 8.4, db.t3.small. 주 서버는 2c, 대기 서버는 2a. 저장 암호화 켜짐, 외부 공개 꺼짐, 백업 7일 보관, 삭제 방지 켜짐.</div>
+    <div class="say"><span class="q">Multi-AZ와 Read Replica는 뭐가 다른가요?</span>Multi-AZ는 장애에 대비한 대기 서버라서 평소에는 요청을 받지 않아요. Read Replica는 읽기 요청을 나눠 받으려고 두는 복제본이에요. 저희는 끊기지 않는 게 먼저라 Multi-AZ를 골랐어요.</div>
+    <div class="say"><span class="q">Multi-AZ면 완전 무중단인가요?</span>전환되는 동안 잠깐 끊길 수 있어요. 주소는 그대로이고 뒤에서 가리키는 서버만 바뀌기 때문에, 애플리케이션이 다시 연결하면 이어져요.</div>
+  </div>
+
+  <div class="card">
+    <h3>Secrets Manager와 비밀번호 자동 교체</h3>
+    <p><span class="eg">비밀번호 금고</span>예요. DB 비밀번호를 코드나 서버에 적어 두지 않고 금고에 넣어 둬요. WAS는 DB에 연결할 때마다 금고에서 꺼내 써요.</p>
+    <p><b>Rotation</b>은 금고 비밀번호를 주기적으로 새 걸로 바꾸는 거예요. 바꾸는 일은 별도의 Lambda가 해요. DB의 비밀번호와 금고 안의 값을 함께 바꿔요.</p>
+    <div class="ours"><b>우리 구성</b> 시크릿 이름 <code>assac/rds/petclinic</code>. 하루에 한 번 교체. WAS는 AWS가 만든 JDBC 드라이버를 써서, 연결할 때 금고에서 자동으로 읽어 와요.</div>
+    <div class="say"><span class="q">비밀번호가 바뀌면 WAS를 재시작해야 하나요?</span>아니요. 이미 맺어 둔 연결은 그대로 쓰고, 새로 연결할 때 드라이버가 금고에서 최신 값을 다시 읽어요.</div>
+    <div class="say"><span class="q">조회와 Rotation은 뭐가 다른가요?</span>조회는 WAS가 지금 비밀번호를 읽기만 하는 거고, Rotation은 Lambda가 비밀번호 자체를 새로 바꾸는 거예요. 하는 주체와 권한이 달라요.</div>
+  </div>
+
+  <div class="card">
+    <h3>VPC Endpoint</h3>
+    <p><span class="eg">건물 안에 뚫어 둔 금고 전용 통로</span>예요. Secrets Manager는 원래 VPC 밖에 있는 AWS 서비스라서, 그냥 가면 NAT를 거쳐 인터넷으로 나갔다 와야 해요. Endpoint가 있으면 건물 안에서 바로 닿아요.</p>
+    <div class="ours"><b>우리 Endpoint</b> Secrets Manager용 하나. DB 서브넷 두 곳에 사설 IP가 하나씩 있어요. 443 포트를 WAS와 비밀번호 교체 Lambda에만 열었어요.</div>
+    <div class="say"><span class="q">왜 Endpoint를 썼나요?</span>두 가지예요. 비밀번호를 읽는 통신이 인터넷으로 나가지 않게 하려는 것, 그리고 비밀번호 교체 Lambda가 있는 DB 서브넷에는 밖으로 나가는 길이 아예 없어서 Endpoint가 없으면 금고에 닿을 수 없다는 거예요.</div>
+    <div class="say"><span class="q">정말 Endpoint로 가는지 어떻게 아나요?</span>CloudTrail에 조회 요청이 어느 Endpoint를 거쳤는지 남아요. WAS의 조회 16,000여 건 전부에 저희 Endpoint가 찍혀 있어요.</div>
+  </div>
+
+  <div class="card">
+    <h3>IAM 역할</h3>
+    <p><span class="eg">사원증</span>이에요. 서버에 사원증(역할)을 달아 주면, 서버가 그걸로 AWS 서비스를 쓸 자격을 그때그때 받아요. 비밀 키를 서버에 저장할 필요가 없어요.</p>
+    <div class="ours"><b>WAS 사원증으로 할 수 있는 일</b> DB 시크릿 하나 읽기, ECR에서 이미지 받기, CloudWatch로 로그와 지표 보내기, Prometheus로 지표 보내기.</div>
+    <div class="say"><span class="q">서버에 Access Key를 저장했나요?</span>아니요. 서버에 붙은 IAM 역할이 임시 자격증명을 줘요. 임시라서 자동으로 바뀌고, 유출돼도 오래 못 써요.</div>
+    <div class="say"><span class="q">IAM 역할은 통신 경로인가요?</span>아니요. 역할은 "이 요청을 보낼 자격이 있는지"를 확인하는 수단이에요. 통신이 지나가는 길은 Endpoint예요.</div>
+  </div>
+
+  <div class="card">
+    <h3>GuardDuty와 CloudTrail</h3>
+    <p><span class="eg">GuardDuty는 건물 안을 도는 경비원, CloudTrail은 출입 기록부</span>예요. WAF는 정문에서 웹 요청만 봐요. GuardDuty는 그 안쪽에서 계정이나 서버가 수상하게 움직이는지를 봐요. CloudTrail은 누가 언제 어떤 AWS 설정을 건드렸는지 전부 적어 둬요.</p>
+    <div class="ours"><b>우리 구성</b> GuardDuty가 위협을 찾으면 EventBridge → Lambda → Discord 전용 채널로 알려요. 탐지와 알림까지 구현했고, 자동 차단은 넣지 않았어요. CloudTrail은 S3와 CloudWatch Logs 두 곳에 남겨요.</div>
+    <div class="say"><span class="q">WAF가 있는데 GuardDuty는 왜 필요한가요?</span>보는 곳이 달라요. WAF는 들어오는 웹 요청을 막고, GuardDuty는 이미 안쪽에서 일어나는 이상한 움직임을 찾아요.</div>
+  </div>
+</section>
+
+<section id="mon">
+  <h2>4. 모니터링</h2>
+  <p class="who">담당 이민규 · CloudWatch 대시보드, 경보, 로그, Prometheus, Grafana</p>
+
+  <div class="card">
+    <h3>지표, 로그, 대시보드, 경보</h3>
+    <p><span class="eg">지표는 체온계 숫자, 로그는 진료 일지, 대시보드는 상황판, 경보는 호출 벨</span>이에요.</p>
+    <ul>
+      <li><b>지표(Metric)</b>: 시간마다 찍히는 숫자. CPU 사용률, 요청 수, 오류 수.</li>
+      <li><b>로그(Log)</b>: 무슨 일이 있었는지 글로 남은 기록.</li>
+      <li><b>대시보드</b>: 지표와 로그를 한 화면에 모아 그린 것. 보기만 하는 곳이에요.</li>
+      <li><b>경보(Alarm)</b>: 지표가 기준을 넘으면 사람에게 알려 주는 것.</li>
+    </ul>
+    <p>그래프의 가로축은 시간, 세로축은 값이에요. 선이 갑자기 솟거나 꺼지는 곳을 찾으면 돼요.</p>
+  </div>
+
+  <div class="card">
+    <h3>CloudWatch 대시보드 읽는 법</h3>
+    <p>대시보드 이름은 <code>assac-dashboard</code>이고 칸이 24개예요. 요청이 지나가는 순서대로 위에서 아래로 놓여 있어요. 맨 위 숫자 다섯 개로 "지금 괜찮은가"를 보고, 이상하면 아래로 내려가면서 어느 층인지 찾는 구조예요.</p>
+    <div class="tw"><table>
+      <tr><th>줄</th><th>칸 이름</th><th>보는 법</th></tr>
+      <tr><td rowspan="5">맨 위<br>요약 숫자</td><td>Web TG 상태</td><td>Apache 서버가 건강한지. 건강한 서버가 있고 아픈 서버가 없으면 1</td></tr>
+      <tr><td>WAS TG 상태</td><td>WAS 서버가 건강한지. 같은 방식</td></tr>
+      <tr><td>Web ALB 요청수 / 에러</td><td>들어온 요청 수와 서버가 낸 5XX 오류 수</td></tr>
+      <tr><td>WAS ALB 응답 속도</td><td>WAS가 답하는 데 걸린 시간. 길어지면 느려진 것</td></tr>
+      <tr><td>RDS 상태 요약</td><td>DB 연결 수와 CPU</td></tr>
+      <tr><td rowspan="3">Tier 1<br>CloudFront와 WEB ALB</td><td>CloudFront 트래픽 및 오류율</td><td>사용자가 실제로 겪는 4xx, 5xx 비율. 여기가 올라가면 사용자가 오류를 보고 있는 것</td></tr>
+      <tr><td>Web ALB 요청수 및 HTTP 상태코드</td><td>2XX는 정상, 4XX는 요청 잘못, 5XX는 서버 문제</td></tr>
+      <tr><td>Web ALB 응답 지연시간</td><td>평균과 느린 쪽 값. 선이 올라가면 느려진 것</td></tr>
+      <tr><td rowspan="5">Tier 2<br>Apache</td><td>Web TG Health 추이</td><td>건강한 서버 수(Healthy)와 아픈 서버 수(UnHealthy)</td></tr>
+      <tr><td>Web ASG 인스턴스 스케일링 추이</td><td>서비스 중, 뜨는 중, 꺼지는 중인 서버 수와 최대치</td></tr>
+      <tr><td>Web ASG CPU 사용률</td><td>70% 선을 넘으면 서버가 늘어남</td></tr>
+      <tr><td>Web 실제 에러 및 장애 로그</td><td>Apache 로그에서 오류만 골라 보여 줌</td></tr>
+      <tr><td>Web 최근 요청 로그</td><td>방금 들어온 요청 목록</td></tr>
+      <tr><td rowspan="3">Tier 3<br>WAS</td><td>WAS TG Health 추이</td><td>WAS가 몇 대 건강한지</td></tr>
+      <tr><td>WAS ASG 인스턴스 현황</td><td>부하 테스트 때 2 → 3 → 4로 계단처럼 올라가는 그래프가 여기</td></tr>
+      <tr><td>WAS ALB 요청수 및 5XX 에러</td><td>WAS 쪽 오류. 5XX 경보가 보는 값도 여기</td></tr>
+      <tr><td rowspan="3">Tier 4<br>DB</td><td>RDS CPU 및 여유 메모리</td><td>CPU는 높을수록, 여유 메모리는 낮을수록 위험</td></tr>
+      <tr><td>RDS 커넥션 및 잔여 스토리지</td><td>연결 수가 갑자기 뛰면 WAS가 연결을 많이 여는 것</td></tr>
+      <tr><td>RDS I/O 지연시간 및 처리량</td><td>디스크가 느려졌는지</td></tr>
+    </table></div>
+    <div class="say"><span class="q">대시보드는 어떻게 구성했나요?</span>요청이 지나가는 순서대로 CloudFront, WEB, WAS, DB 네 구역으로 나눴어요. 맨 위 요약 숫자로 이상 여부를 먼저 보고, 아래로 내려가면서 어느 층에서 문제가 났는지 좁혀 가요.</div>
+    <div class="say"><span class="q">장애가 나면 어디부터 보나요?</span>맨 위 요약에서 어느 층의 숫자가 깨졌는지 보고, 그 층의 그래프와 로그로 내려가요. 예를 들어 5XX가 오르는데 WAS는 건강하고 DB 연결 수만 뛰었으면 DB 쪽을 의심해요.</div>
+  </div>
+
+  <div class="card">
+    <h3>경보와 알림 경로</h3>
+    <p>경보는 대시보드와 별개예요. 사람이 화면을 안 보고 있어도 기준을 넘으면 알려 줘요.</p>
+    <div class="tw"><table>
+      <tr><th>경보</th><th>보는 값</th><th>울리는 기준</th><th>알림</th></tr>
+      <tr><td><code>assac-alarm-alb-5xx</code></td><td>내부 ALB가 낸 5XX 수</td><td>1분에 5건 이상</td><td>Discord</td></tr>
+      <tr><td><code>assac-alarm-asg-cpu</code></td><td>WAS 평균 CPU</td><td>5분 평균 80% 이상</td><td>Discord</td></tr>
+      <tr><td><code>assac-alarm-rds-cpu</code></td><td>DB CPU</td><td>90% 이상이 5분 연속</td><td>Discord</td></tr>
+      <tr><td><code>assac-was-zero-healthy-call</code></td><td>서비스 중인 WAS 수</td><td>아래 주의 참고</td><td>전화</td></tr>
+    </table></div>
+    <p>경로는 <b>경보 → SNS → Lambda → Discord</b>예요. SNS는 방송실이에요. 한 번 알리면 구독한 곳 모두에게 전달돼요. Lambda는 그 내용을 Discord가 받는 모양으로 정리해요.</p>
+    <div class="say"><span class="q">CPU 70%와 80%는 뭐가 다른가요?</span>70%는 Auto Scaling이 서버를 늘리는 기준이고, 80%는 사람에게 알리는 기준이에요. 서버가 늘어났는데도 80%까지 갔다면 사람이 봐야 하는 상황이에요.</div>
+    <div class="warn">전화 경보의 조건이 조회 시점에 "WAS 6대 이상"으로 돼 있었어요. 이름은 "0대면 전화"예요. 시연용으로 바꿔 둔 것으로 보이니, 서버를 켤 때 담당자에게 확인이 필요해요.</div>
+  </div>
+
+  <div class="card">
+    <h3>로그는 어디에 쌓이나</h3>
+    <div class="tw"><table>
+      <tr><th>로그</th><th>위치</th><th>보관</th></tr>
+      <tr><td>Apache</td><td>CloudWatch Logs <code>/assac/web</code></td><td>30일</td></tr>
+      <tr><td>WAS</td><td>CloudWatch Logs <code>/assac/was</code></td><td>30일</td></tr>
+      <tr><td>VPC 안의 통신 기록 (Flow Logs)</td><td><code>/assac/vpc-flowlogs</code></td><td>30일</td></tr>
+      <tr><td>AWS 설정 변경 기록 (CloudTrail)</td><td><code>/assac/cloudtrail</code>과 S3</td><td>30일</td></tr>
+      <tr><td>DB 오류, 느린 쿼리</td><td><code>/aws/rds/instance/assac-rds-petclinic/…</code></td><td>30일</td></tr>
+      <tr><td>ALB 접근 로그</td><td>S3 <code>assac-logs-2777</code></td><td>14일</td></tr>
+      <tr><td>WAF 로그</td><td><code>aws-waf-logs-assac-cloudfront</code> (버지니아)</td><td>30일</td></tr>
+    </table></div>
+    <p>서버 안의 <b>CloudWatch Agent</b>라는 프로그램이 로그 파일과 메모리·디스크 값을 CloudWatch로 보내요. EC2 기본 지표에는 메모리가 없어서 이 프로그램이 필요해요.</p>
+  </div>
+
+  <div class="card">
+    <h3>Prometheus와 Grafana</h3>
+    <p><span class="eg">CloudWatch가 건물 설비 상황판이라면, Grafana는 진료실 안을 들여다보는 상황판</span>이에요. CloudWatch는 서버 바깥에서 보이는 값(CPU, 요청 수)을 보여 줘요. 프로그램 안에서 무슨 일이 벌어지는지는 안 보여요. 그걸 보려고 Prometheus와 Grafana를 붙였어요.</p>
+    <ul>
+      <li><b>Prometheus</b>: 프로그램이 내놓는 숫자를 주기적으로 가져다 쌓아 두는 저장소. 우리는 AWS가 관리해 주는 <b>AMP</b>(<code>assac-petclinic-amp</code>)를 써요.</li>
+      <li><b>Grafana</b>: 그 숫자를 그래프로 그려 주는 화면.</li>
+    </ul>
+    <p>흐름은 <b>PetClinic이 숫자를 내놓음 → 서버의 수집기가 가져감 → AMP에 저장 → Grafana가 그림</b>이에요.</p>
+    <div class="ours"><b>AMP에 실제로 쌓이는 지표 (42종, 출처는 WAS 하나)</b>
+      <div class="tw"><table>
+        <tr><th>묶음</th><th>지표 이름</th><th>무슨 뜻</th></tr>
+        <tr><td>DB 연결 풀</td><td><code>tomcat_jdbc_connections_active</code></td><td>지금 쓰고 있는 DB 연결 수</td></tr>
+        <tr><td></td><td><code>tomcat_jdbc_connections_idle</code></td><td>만들어 두고 쉬고 있는 연결 수</td></tr>
+        <tr><td></td><td><code>tomcat_jdbc_connections_max</code></td><td>풀이 가질 수 있는 최대 연결 수</td></tr>
+        <tr><td></td><td><code>tomcat_jdbc_connections_wait_count</code></td><td>연결이 모자라 기다린 횟수. 0이 아니면 풀이 부족한 것</td></tr>
+        <tr><td>요청</td><td><code>http_server_requests_seconds_*</code></td><td>주소별 요청 수와 걸린 시간</td></tr>
+        <tr><td>JVM</td><td><code>jvm_memory_used_bytes</code></td><td>Java가 쓰는 메모리</td></tr>
+        <tr><td></td><td><code>jvm_gc_pause_seconds_*</code></td><td>메모리 청소(GC) 때문에 멈춘 시간</td></tr>
+        <tr><td></td><td><code>jvm_threads_live_threads</code></td><td>일하고 있는 스레드 수</td></tr>
+        <tr><td>프로세스</td><td><code>process_cpu_usage</code>, <code>system_cpu_usage</code></td><td>프로그램과 서버의 CPU 사용률</td></tr>
+        <tr><td>수집 상태</td><td><code>up</code></td><td>수집이 되고 있으면 1, 끊기면 0</td></tr>
+      </table></div>
+    </div>
+    <p><b>DB 연결 풀</b>은 DB와의 연결을 미리 몇 개 만들어 두고 돌려 쓰는 거예요. 요청마다 새로 연결하면 느려서요. WAS 한 대가 처음에 10개를 만들기 때문에 두 대면 합계 20이 보여요.</p>
+    <div class="say"><span class="q">CloudWatch가 있는데 Grafana는 왜 썼나요?</span>CloudWatch로는 CPU나 요청 수 같은 인프라 값을 보고, Grafana로는 DB 연결 풀이나 JVM 메모리 같은 애플리케이션 안쪽 값을 봐요. 서버는 멀쩡한데 서비스가 느린 경우는 안쪽 값을 봐야 원인이 나와요.</div>
+    <div class="say"><span class="q">Prometheus를 직접 안 깔고 AMP를 쓴 이유는요?</span>직접 설치하면 그 서버의 디스크와 장애까지 저희가 챙겨야 해요. 관리형을 쓰면 저장과 가용성은 AWS가 맡아요.</div>
+  </div>
+
+  <div class="card">
+    <h3>Grafana 대시보드 읽는 법</h3>
+    <p>대시보드 이름은 <b>"ASSAC · 서비스 흐름과 원인 분석"</b>이고 칸이 50개예요. 8개 줄(00~07)로 나뉘어 있고, 위에서 아래로 내려가며 원인을 좁히는 순서예요. 이걸 <b>드릴다운</b>이라고 해요.</p>
+    <p>화면 맨 위에 선택 상자가 두 개 있어요. <b>WAS 서버</b>와 <b>요청 경로</b>예요. 특정 서버나 특정 주소만 골라서 볼 수 있어요.</p>
+    <div class="tw"><table>
+      <tr><th>줄</th><th>묻는 것</th><th>들어 있는 칸</th><th>보는 법</th></tr>
+      <tr><td>00 한눈에 보기</td><td>지금 괜찮은가</td><td>지표가 수집되는 WAS 수 · 앱 요청량(초당) · 앱 평균 처리시간 · 앱 요청수와 서버 오류</td><td>숫자 네 개. 최근 5분 기준이에요. 요청이 0건이면 정상이 아니라 "자료 없음"이에요.</td></tr>
+      <tr><td>01 전체 요청 흐름</td><td>어느 구간에서 문제가 생겼나</td><td>요청 흐름 CloudFront → WEB → WAS · CloudFront 요청수와 오류 비율 · WAF 허용·차단 · WEB·WAS 정상/비정상 타깃 수 · 서버 오류(5xx) · WEB 응답시간 · WAS 응답시간 · 4xx 오류 · ALB가 서버에 연결 못 한 횟수</td><td>세 구간의 요청 수를 나란히 봐요. 한 구간에서만 오류나 지연이 오르면 거기가 문제예요. WAF 그래프가 내 파트예요.</td></tr>
+      <tr><td>02 요청 경로</td><td>어떤 요청이 느리거나 실패했나</td><td>느린 요청 경로 순위 · 요청이 많은 경로 · 경로별 평균 처리시간 · 응답 코드별 요청량 · 경로별 오류 건수 · WAS별 느린 응답 기록</td><td><code>/owners</code>, <code>/vets</code>처럼 주소별로 나눠 봐요. 특정 주소만 느리면 그 기능의 문제예요.</td></tr>
+      <tr><td>03 WAS 비교</td><td>어느 WAS를 봐야 하나</td><td>같은 요청을 처리한 WAS 비교표</td><td>서버별 요청 수, 평균 처리시간, 5xx 건수를 한 표에서 비교해요. 한 대만 튀면 그 서버가 문제예요.</td></tr>
+      <tr><td>04 앱과 서버 자원</td><td>그 서버에 힘이 남아 있나</td><td>앱 CPU · 서버 전체 CPU · 앱 메모리(Heap) · 메모리 정리 중 정지시간</td><td>앱 CPU와 서버 CPU를 비교해요. Heap이 차고 정지시간이 길어지면 메모리가 부족한 거예요.</td></tr>
+      <tr><td>05 DB 연결</td><td>DB 연결을 기다리고 있나</td><td>DB 연결(사용 중 / 준비됨 / 최대) · DB 연결 대기 · 연결 사용률 · RDS에 열린 연결 수 · RDS CPU · RDS 디스크 읽기·쓰기 시간 · RDS CPU와 디스크 대기</td><td>사용 중 연결이 최대에 붙고 대기가 생기면 풀이 모자란 거예요. 그때 RDS CPU도 높으면 DB가 느린 거예요.</td></tr>
+      <tr><td>06 오류 로그</td><td>실제로 뭐라고 찍혔나</td><td>선택 WAS의 오류 로그 · 앱·DB 연결 오류 로그 · DB 연결 차단 의심 기록</td><td>그래프가 나빠진 시각의 로그 원문을 봐요. 마지막 칸은 WAS에서 DB 3306으로 가다 거부된 통신이에요.</td></tr>
+      <tr><td>07 지표 수집</td><td>이 화면 자체를 믿어도 되나</td><td>WAS 목표·가동·준비 중 대수 · 앱 지표 수집 성공·실패 대수 · 수집 이력 · 마지막 지표 경과시간 · 수집 소요시간 · 수집한 지표 수 · 로그가 마지막으로 들어온 시각</td><td>그래프가 비어 있을 때 봐요. 서버가 없어서 비었는지, 수집이 끊겨서 비었는지 구분해요.</td></tr>
+    </table></div>
+    <p><b>용어 두 개만 알면 돼요.</b></p>
+    <ul>
+      <li><b>p95</b>: 요청 100개를 빠른 순으로 줄 세웠을 때 95번째의 시간이에요. 평균은 멀쩡한데 일부만 느린 경우를 잡아내요.</li>
+      <li><b>타깃</b>: ALB 뒤에 달린 서버예요. "정상 타깃 수"는 헬스체크를 통과한 서버 수예요.</li>
+    </ul>
+    <div class="ours"><b>두 대시보드의 역할 나눔</b><br>Grafana: 요청이 왜 느린지, 왜 실패하는지 원인을 찾는 화면. 앱 안쪽 값(Prometheus)과 AWS 값(CloudWatch)을 한 화면에 같이 그려요.<br>CloudWatch <code>assac-dashboard</code>: 서버 수, 경보, 복구 상태를 보는 운영 화면.</div>
+    <div class="say"><span class="q">Grafana 대시보드는 어떻게 구성했나요?</span>문제를 좁혀 가는 순서대로 놓았어요. 맨 위에서 지금 상태를 보고, 전체 요청 흐름에서 어느 구간인지, 어떤 요청 경로인지, 어느 서버인지, 그 서버의 자원과 DB 연결은 어떤지 차례로 내려가요. 마지막에 그 시각의 오류 로그로 확인해요.</div>
+    <div class="say"><span class="q">서비스가 느려지면 어떻게 원인을 찾나요?</span>먼저 전체 흐름에서 CloudFront, WEB, WAS 중 어느 구간의 응답시간이 올랐는지 봐요. WAS라면 어떤 요청 경로가 느린지, 특정 서버만 느린지 확인하고요. 그다음 그 서버의 CPU와 메모리, DB 연결 대기를 보고, 마지막으로 그 시각의 오류 로그로 확정해요.</div>
+    <div class="say"><span class="q">오류율은 어떻게 읽나요?</span>비율보다 건수를 먼저 봐요. 요청 2건 중 1건이 실패해도 50%로 나오거든요. 전체 요청 수와 함께 읽어야 해요.</div>
+  </div>
+</section>
+
+<section id="tf">
+  <h2>5. Terraform</h2>
+  <p class="who">팀 공통 · 각자 자기 모듈 담당</p>
+  <div class="card">
+    <h3>Terraform이 하는 일</h3>
+    <p><span class="eg">건물 설계도</span>예요. 콘솔에서 손으로 누른 설정을 글(코드)로 적어 두는 거예요. 설계도가 있으면 누가 왜 그렇게 만들었는지 기록이 남고, 똑같은 건물을 다시 지을 수 있어요.</p>
+    <ul>
+      <li><b>plan</b>: 설계도와 실제 건물을 비교해서 뭐가 달라질지 미리 보여 줌. 아무것도 안 바뀜.</li>
+      <li><b>apply</b>: 설계도대로 실제로 바꿈.</li>
+      <li><b>state</b>: "설계도의 이 줄이 실제의 저 리소스"라고 짝지어 둔 장부. S3에 둬요.</li>
+      <li><b>import</b>: 이미 지어 놓은 건물을 부수지 않고 장부에 올리는 것.</li>
+    </ul>
+    <div class="ours"><b>우리 방식</b> 모듈 5개(network, security-group, compute, rds, edge). 콘솔로 먼저 만든 리소스를 import로 가져왔어요. 각자 plan까지 확인하고 PR을 올리면, apply는 팀장 한 명만 해요.</div>
+    <div class="say"><span class="q">왜 새로 만들지 않고 import를 했나요?</span>이미 동작하는 서비스를 지우고 다시 만들면 그동안 서비스가 멈춰요. import는 기존 리소스를 그대로 두고 코드로 관리만 시작하는 방법이에요.</div>
+    <div class="say"><span class="q">apply를 왜 한 명만 하나요?</span>여러 명이 동시에 바꾸면 서로의 변경을 덮어쓸 수 있어요. 바꾸는 사람을 한 명으로 정해서 순서를 지켜요.</div>
+    <div class="warn">엣지 모듈 코드는 아직 예전 구조(VPC Origin)예요. 그대로 apply하면 CloudFront 원본이 예전으로 되돌아가요. 발표 전에는 엣지 모듈을 apply하지 않도록 팀장과 맞춰 두세요.</div>
+  </div>
+</section>
+
+<section id="pair">
+  <h2>6. 자주 헷갈리는 짝</h2>
+  <div class="card">
+    <div class="tw"><table>
+      <tr><th>짝</th><th>한 줄 구분</th></tr>
+      <tr><td>ALB와 ASG</td><td>ALB는 요청을 나눠 주는 곳, ASG는 서버 수를 맞추는 곳. ALB가 "이 서버 아파요"라고 알려 주면 ASG가 바꿔요.</td></tr>
+      <tr><td>Scale-out과 Scale-up</td><td>out은 서버 대수를 늘림, up은 서버 한 대의 사양을 올림. 우리는 out.</td></tr>
+      <tr><td>고가용성과 확장성</td><td>고가용성은 하나가 죽어도 버팀(2개 영역, Multi-AZ). 확장성은 바빠지면 늘어남(Auto Scaling).</td></tr>
+      <tr><td>Multi-AZ와 백업</td><td>Multi-AZ는 지금 당장 넘어가기 위한 것, 백업은 과거 시점으로 되돌리기 위한 것.</td></tr>
+      <tr><td>보안그룹과 WAF</td><td>보안그룹은 "누가 몇 번 문으로"만 봄. WAF는 요청 내용까지 봄.</td></tr>
+      <tr><td>CloudWatch, CloudTrail, GuardDuty</td><td>CloudWatch는 상태(숫자와 로그), CloudTrail은 누가 뭘 바꿨는지, GuardDuty는 수상한 움직임.</td></tr>
+      <tr><td>Secrets Manager와 Parameter Store</td><td>둘 다 값 보관소. 자동 교체가 필요한 DB 비밀번호는 Secrets Manager에 뒀어요.</td></tr>
+      <tr><td>Health 체크와 실제 정상</td><td>헬스체크는 정해 둔 주소가 답하는지만 봐요. 실제 기능이 되는지는 따로 확인해야 해요.</td></tr>
+      <tr><td>502, 503, 504</td><td>502는 뒤 서버가 이상한 답을 줌, 503은 받을 서버가 없음, 504는 기다리다 시간 초과.</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<section id="fix">
+  <h2>7. 조회하다 발견한, 말할 때 조심할 표현</h2>
+  <div class="card">
+    <ul>
+      <li><b>연결 풀 이름.</b> 기존 자료에는 HikariCP라고 적힌 곳이 있는데, 실제로 쌓이는 지표는 <code>tomcat_jdbc_connections_*</code>이에요. 연결 풀은 Tomcat JDBC Pool이에요. "DB 연결 풀"이라고만 말하면 안전해요.</li>
+      <li><b>Multi-stage 빌드.</b> 기존 자료에는 Multi-stage Dockerfile이라고 적혀 있는데, 지금 Dockerfile은 한 단계예요. Maven 빌드는 GitHub Actions에서 하고, Dockerfile은 그 결과물만 Jetty 위에 올려요. "빌드는 CI에서 한 번 하고, 이미지에는 결과물만 넣는다"가 정확해요.</li>
+      <li><b>Tomcat이 아니라 Jetty.</b> 과제 안내에는 Tomcat으로 적혀 있지만 실제 WAS는 Jetty예요.</li>
+      <li><b>NAT 위치.</b> "2a에 1개"가 아니라 두 영역을 함께 맡는 Regional NAT 1개예요.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>김채연 노트</title>
+<style>
+:root{--bg:#fafafa;--fg:#18181b;--muted:#71717a;--line:#e4e4e7;--card:#fff;--accent:#2563eb}
+@media (prefers-color-scheme:dark){:root{--bg:#0c0c0d;--fg:#f4f4f5;--muted:#a1a1aa;--line:#27272a;--card:#18181b;--accent:#60a5fa}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;line-height:1.6;word-break:keep-all}
+main{max-width:640px;margin:0 auto;padding:48px 16px}
+h1{font-size:1.4rem;margin:0 0 4px}
+p.lead{color:var(--muted);margin:0 0 28px}
+a.card{display:block;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px 20px;margin-bottom:12px;color:inherit;text-decoration:none}
+a.card:hover{border-color:var(--accent)}
+a.card strong{display:block;font-size:1.05rem}
+a.card span{color:var(--muted);font-size:.93rem}
+footer{margin-top:28px;font-size:.88rem;color:var(--muted)}
+footer a{color:var(--accent)}
+</style>
+</head>
+<body>
+<main>
+  <h1>노트</h1>
+  <p class="lead">프로젝트를 하면서 만든 설명 자료와 시안입니다.</p>
+  <a class="card" href="assac-infra-map/"><strong>PetClinic 인프라 지도</strong><span>ASSAC 프로젝트의 AWS 구성과 요청 흐름</span></a>
+  <a class="card" href="assac-guide/"><strong>ASSAC 팀원 파트 쉬운 설명</strong><span>팀원별 담당 부분을 쉽게 풀어 쓴 자료</span></a>
+  <a class="card" href="final-project-draft/"><strong>최종 프로젝트 샘플 대시보드</strong><span>최종 프로젝트 주제 논의용 시안(더미 데이터)</span></a>
+  <footer><a href="https://kimchaeyeon.dev">kimchaeyeon.dev</a></footer>
+</main>
+</body>
+</html>
